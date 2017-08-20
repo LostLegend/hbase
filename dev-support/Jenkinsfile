@@ -170,6 +170,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
       steps {
         unstash 'yetus'
         sh '''#!/usr/bin/env bash
+          mkdir -p "${OUTPUTDIR}"
           # for branch-1.1 we don't do jdk8 findbugs, so do it here
           if [ "${BRANCH_NAME}" == "branch-1.1" ]; then
             TESTS+=",findbugs"
@@ -234,6 +235,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
       steps {
         unstash 'yetus'
         sh '''#!/usr/bin/env bash
+          mkdir -p "${OUTPUTDIR}"
           declare commentfile
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
             commentfile='${OUTPUTDIR}/success'
@@ -377,23 +379,33 @@ END
             comment += 'Committer, please check your recent inclusion of a patch for this issue.\\'
          }
          comment += "	[build ${currentBuild.displayName} on builds.a.o|${env.BUILD_URL}]: ${currentBuild.result}\\----\\details (if available):"
-         echo "Comment so far: "
+         echo "[DEBUG] Comment so far: "
          echo comment
          echo ""
-         echo "trying to aggregate step-wise results"
+         echo "[DEBUG] trying to aggregate step-wise results"
          comment += results.collect { fileExists(file: it) ? readFile(file: it) : "\n" }.join
+         echo "[INFO] Comment:"
          echo comment
-         echo "${currentBuild.changeSets.size} changes"
+         echo ""
+         echo "[INFO] ${currentBuild.changeSets.size} changes"
+         def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
            echo "	${change.getAuthor}"
            echo "	${change.getMsg}"
            echo "	${change.getMsgAnnotated}"
            echo ""
-           // figure out jira  from the message
-           // dedup jiras we already commented on
-           // comment, something like
-           // jiraComment issueKey: currentIssue, body: comment
+           change.getMsg.findAll( /HBASE-[0-9]+/ ).each { currentIssue ->
+             echo "[DEBUG] found jira key: ${currentIssue}"
+             if ( currentIssue in seenJiras ) {
+               echo "[DEBUG] already commented on ${currentIssue}."
+             } else {
+               echo "[INFO] commenting on ${currentIssue}."
+               jiraComment issueKey: currentIssue, body: comment
+               seenJiras << currentIssue
+             }
+           }
+           //TODO warn if no JIRA key found in message, email committer
          }
       }
     }
