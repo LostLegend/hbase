@@ -170,17 +170,16 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
       steps {
         unstash 'yetus'
         sh '''#!/usr/bin/env bash
-          mkdir -p "${OUTPUTDIR}"
           # for branch-1.1 we don't do jdk8 findbugs, so do it here
           if [ "${BRANCH_NAME}" == "branch-1.1" ]; then
             TESTS+=",findbugs"
           fi
           declare commentfile
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
-            commentfile='${OUTPUTDIR}/success'
+            commentfile="${OUTPUTDIR}/success"
             echo '(/) *{color:green}+1 jdk7 checks{color}*' >> "${commentfile}"
           else
-            commentfile='${OUTPUTDIR}/failure'
+            commentfile="${OUTPUTDIR}/failure"
             echo '(x) *{color:red}-1 jdk7 checks{color}*' >> "${commentfile}"
           fi
           echo '-- For more information [see jdk7 report|${BUILD_URL}/JDK7_Nightly_Build_Report/]' >> "${commentfile}"
@@ -235,13 +234,12 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
       steps {
         unstash 'yetus'
         sh '''#!/usr/bin/env bash
-          mkdir -p "${OUTPUTDIR}"
           declare commentfile
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
-            commentfile='${OUTPUTDIR}/success'
+            commentfile="${OUTPUTDIR}/success"
             echo '(/) *{color:green}+1 jdk8 checks{color}*' >> "${commentfile}"
           else
-            commentfile='${OUTPUTDIR}/failure'
+            commentfile="${OUTPUTDIR}/failure"
             echo '(x) *{color:red}-1 jdk8 checks{color}*' >> "${commentfile}"
           fi
           echo '-- For more information [see jdk8 report|${BUILD_URL}/JDK8_Nightly_Build_Report/]' >> "${commentfile}"
@@ -383,7 +381,7 @@ END
          echo comment
          echo ""
          echo "[DEBUG] trying to aggregate step-wise results"
-         comment += results.collect { fileExists(file: it) ? readFile(file: it) : "\n" }.join
+         comment += results.collect { fileExists(file: it) ? readFile(file: it) : "\n" }.join("\n")
          echo "[INFO] Comment:"
          echo comment
          echo ""
