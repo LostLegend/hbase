@@ -389,8 +389,8 @@ END
          echo "[INFO] Comment:"
          echo comment
          echo ""
-         echo "[DEBUG] ${currentBuild.changeSets}"
-         echo "[INFO] ${currentBuild.changeSets.getItems().length} changes"
+//         echo "[DEBUG] ${currentBuild.changeSets}"
+//         echo "[INFO] ${currentBuild.changeSets.getItems().length} changes"
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
