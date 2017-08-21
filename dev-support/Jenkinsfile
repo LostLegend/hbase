@@ -391,15 +391,17 @@ END
          echo ""
          if ( currentBuild.changeSets.isEmptySet() ) {
            echo "[DEBUG] change set was empty, skipping JIRA comments."
+         } else {
+           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
          }
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
-           echo "	${change.getAuthor}"
-           echo "	${change.getMsg}"
-           echo "	${change.getMsgAnnotated}"
+           echo "	${change.getAuthorName()}"
+           echo "	${change.getMsg()}"
+           echo "	${change.getMsgAnnotated()}"
            echo ""
-           change.getMsg.findAll( /HBASE-[0-9]+/ ).each { currentIssue ->
+           change.getMsg().findAll( /HBASE-[0-9]+/ ).each { currentIssue ->
              echo "[DEBUG] found jira key: ${currentIssue}"
              if ( currentIssue in seenJiras ) {
                echo "[DEBUG] already commented on ${currentIssue}."
