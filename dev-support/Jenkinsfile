@@ -129,6 +129,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
         unstash 'yetus'
         // TODO should this be a download from master, similar to how the personality is?
         sh '''#!/usr/bin/env bash
+          rm -f "${OUTPUTDIR}/success" "${OUTPUTDIR}/failure"
           declare commentfile
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
             commentfile="${OUTPUTDIR}/success"
@@ -175,6 +176,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
             TESTS+=",findbugs"
           fi
           declare commentfile
+          rm -f "${OUTPUTDIR}/success" "${OUTPUTDIR}/failure"
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
             commentfile="${OUTPUTDIR}/success"
             echo '(/) *{color:green}+1 jdk7 checks{color}*' >> "${commentfile}"
@@ -235,6 +237,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
         unstash 'yetus'
         sh '''#!/usr/bin/env bash
           declare commentfile
+          rm -f "${OUTPUTDIR}/success" "${OUTPUTDIR}/failure"
           if "${BASEDIR}/dev-support/hbase_nightly_yetus.sh" ; then
             commentfile="${OUTPUTDIR}/success"
             echo '(/) *{color:green}+1 jdk8 checks{color}*' >> "${commentfile}"
@@ -315,6 +318,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
         }
         // expectation check largely based on HBASE-14952
         sh '''#!/bin/bash -e
+          rm -rf "${env.WORKSPACE}/src_tarball_success" "${env.WORKSPACE}/src_tarball_failure"
           echo "Checking against things we don't expect to include in the source tarball (git related, hbase-native-client, etc.)"
           cat >known_excluded <<END
 Only in .: .git
