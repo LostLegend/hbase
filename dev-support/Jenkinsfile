@@ -389,8 +389,6 @@ END
          echo "[INFO] Comment:"
          echo comment
          echo ""
-//         echo "[DEBUG] ${currentBuild.changeSets}"
-//         echo "[INFO] ${currentBuild.changeSets.getItems().length} changes"
          if ( currentBuild.changeSets.isEmptySet() ) {
            echo "[DEBUG] change set was empty, skipping JIRA comments."
          }
