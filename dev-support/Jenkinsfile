@@ -394,6 +394,8 @@ END
 //         } else {
 //           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
 //         }
+         echo "[DEBUG] changeset toString: ${currentBuild.changeSets}"
+         echo "[INFO] There are ${currentBuild.changeSets.size} changes."
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
