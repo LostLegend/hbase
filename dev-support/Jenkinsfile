@@ -137,7 +137,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
             commentfile="${OUTPUTDIR}/failure"
             echo '(x) *{color:red}-1 general checks{color}*' >> "${commentfile}"
           fi
-          echo '-- For more information [see general report|${BUILD_URL}/General_Nightly_Build_Report/]' >> "${commentfile}"
+          echo "-- For more information [see general report|${BUILD_URL}/General_Nightly_Build_Report/]" >> "${commentfile}"
         '''
       }
       post {
@@ -182,7 +182,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
             commentfile="${OUTPUTDIR}/failure"
             echo '(x) *{color:red}-1 jdk7 checks{color}*' >> "${commentfile}"
           fi
-          echo '-- For more information [see jdk7 report|${BUILD_URL}/JDK7_Nightly_Build_Report/]' >> "${commentfile}"
+          echo "-- For more information [see jdk7 report|${BUILD_URL}/JDK7_Nightly_Build_Report/]" >> "${commentfile}"
         '''
       }
       post {
@@ -242,7 +242,7 @@ curl -L  -o personality.sh "${env.PROJET_PERSONALITY}"
             commentfile="${OUTPUTDIR}/failure"
             echo '(x) *{color:red}-1 jdk8 checks{color}*' >> "${commentfile}"
           fi
-          echo '-- For more information [see jdk8 report|${BUILD_URL}/JDK8_Nightly_Build_Report/]' >> "${commentfile}"
+          echo "-- For more information [see jdk8 report|${BUILD_URL}/JDK8_Nightly_Build_Report/]" >> "${commentfile}"
         '''
       }
       post {
@@ -376,15 +376,16 @@ END
             // Ideally get the committer our of the change and @ mention them in the per-jira comment
             comment += 'Committer, please check your recent inclusion of a patch for this issue.\\'
          }
-         comment += "	[build ${currentBuild.displayName} on builds.a.o|${env.BUILD_URL}]: ${currentBuild.result}\\----\\details (if available):"
-         echo "[DEBUG] Comment so far: "
-         echo comment
+         comment += "	[build ${currentBuild.displayName} on builds.a.o|${env.BUILD_URL}]: ${currentBuild.result}\\----\\details (if available):\n"
+         //echo "[DEBUG] Comment so far: "
+         //echo comment
          echo ""
          echo "[DEBUG] trying to aggregate step-wise results"
          comment += results.collect { fileExists(file: it) ? readFile(file: it) : "\n" }.join("\n")
          echo "[INFO] Comment:"
          echo comment
          echo ""
+         echo "[DEBUG] ${currentBuild.changeSets}"
          echo "[INFO] ${currentBuild.changeSets.size} changes"
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
