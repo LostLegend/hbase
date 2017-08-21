@@ -385,12 +385,12 @@ END
          //echo comment
          echo ""
          echo "[DEBUG] trying to aggregate step-wise results"
-         comment += results.collect { fileExists(file: it) ? readFile(file: it) : "\n" }.join("\n")
+         comment += results.collect { fileExists(file: it) ? readFile(file: it) : "" }.join("\n")
          echo "[INFO] Comment:"
          echo comment
          echo ""
          echo "[DEBUG] ${currentBuild.changeSets}"
-         echo "[INFO] ${currentBuild.changeSets.size} changes"
+         echo "[INFO] ${currentBuild.changeSets.getItems().length} changes"
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
