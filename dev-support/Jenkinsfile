@@ -400,7 +400,7 @@ END
              echo "[DEBUG] there are changes in the change set. Attempting to post comments."
            }
            for ( change in changelist ) {
-             echo "change:"
+             echo "change: ${change}"
              echo "	${change.getAuthorName()}"
              echo "	${change.getMsg()}"
              echo "	${change.getMsgAnnotated()}"
