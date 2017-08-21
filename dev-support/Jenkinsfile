@@ -393,12 +393,12 @@ END
          echo "[INFO] There are ${currentBuild.changeSets.size()} change sets."
          def seenJiras = []
          for ( changelist in currentBuild.changeSets ) {
-           echo "[DEBUG] changelist toString: ${currentBuild.changeSets}"
-//         if ( currentBuild.changeSets.isEmptySet() ) {
-//           echo "[DEBUG] change set was empty, skipping JIRA comments."
-//         } else {
-//           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
-//         }
+           echo "[DEBUG] changelist toString: ${changelist}"
+           if ( changelist.isEmptySet() ) {
+             echo "[DEBUG] change set was empty, skipping JIRA comments."
+           } else {
+             echo "[DEBUG] there are changes in the change set. Attempting to post comments."
+           }
            for ( change in changelist ) {
              echo "change:"
              echo "	${change.getAuthorName()}"
