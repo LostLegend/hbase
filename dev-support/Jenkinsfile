@@ -389,11 +389,11 @@ END
          echo "[INFO] Comment:"
          echo comment
          echo ""
-         if ( currentBuild.changeSets.isEmptySet() ) {
-           echo "[DEBUG] change set was empty, skipping JIRA comments."
-         } else {
-           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
-         }
+//         if ( currentBuild.changeSets.isEmptySet() ) {
+//           echo "[DEBUG] change set was empty, skipping JIRA comments."
+//         } else {
+//           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
+//         }
          def seenJiras = []
          for ( change in currentBuild.changeSets ) {
            echo "change:"
