@@ -389,31 +389,34 @@ END
          echo "[INFO] Comment:"
          echo comment
          echo ""
+         echo "[DEBUG] changeset toString: ${currentBuild.changeSets}"
+         echo "[INFO] There are ${currentBuild.changeSets.size()} change sets."
+         def seenJiras = []
+         for ( changelist in currentBuild.changeSets ) {
+           echo "[DEBUG] changelist toString: ${currentBuild.changeSets}"
 //         if ( currentBuild.changeSets.isEmptySet() ) {
 //           echo "[DEBUG] change set was empty, skipping JIRA comments."
 //         } else {
 //           echo "[DEBUG] there are changes in the change set (${currentBuild.changeSets}). Attempting to post comments."
 //         }
-         echo "[DEBUG] changeset toString: ${currentBuild.changeSets}"
-         echo "[INFO] There are ${currentBuild.changeSets.size} changes."
-         def seenJiras = []
-         for ( change in currentBuild.changeSets ) {
-           echo "change:"
-           echo "	${change.getAuthorName()}"
-           echo "	${change.getMsg()}"
-           echo "	${change.getMsgAnnotated()}"
-           echo ""
-           change.getMsg().findAll( /HBASE-[0-9]+/ ).each { currentIssue ->
-             echo "[DEBUG] found jira key: ${currentIssue}"
-             if ( currentIssue in seenJiras ) {
-               echo "[DEBUG] already commented on ${currentIssue}."
-             } else {
-               echo "[INFO] commenting on ${currentIssue}."
-               jiraComment issueKey: currentIssue, body: comment
-               seenJiras << currentIssue
+           for ( change in changelist ) {
+             echo "change:"
+             echo "	${change.getAuthorName()}"
+             echo "	${change.getMsg()}"
+             echo "	${change.getMsgAnnotated()}"
+             echo ""
+             change.getMsg().findAll( /HBASE-[0-9]+/ ).each { currentIssue ->
+               echo "[DEBUG] found jira key: ${currentIssue}"
+               if ( currentIssue in seenJiras ) {
+                 echo "[DEBUG] already commented on ${currentIssue}."
+               } else {
+                 echo "[INFO] commenting on ${currentIssue}."
+                 jiraComment issueKey: currentIssue, body: comment
+                 seenJiras << currentIssue
+               }
              }
+             //TODO warn if no JIRA key found in message, email committer
            }
-           //TODO warn if no JIRA key found in message, email committer
          }
       }
     }
